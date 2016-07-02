@@ -1,0 +1,119 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****                                                  *****/
+/************************************************************/
+
+/********************************************************************************/
+/*****        This file is part of Dictionary module for DNN.               *****/
+/*****                                                                      *****/
+/***** Dictionary module for DNN is free software: you can redistribute it  *****/
+/***** and/or modify it under the terms of the GNU General Public License   *****/
+/***** as published by the Free Software Foundation, either version 3 of    *****/
+/***** the License, or (at your option) any later version.                  *****/
+/*****                                                                      *****/
+/***** Dictionary module for DNN is distributed in the hope that it will be *****/
+/***** useful, but WITHOUT ANY WARRANTY; without even the implied warranty  *****/
+/***** of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the      *****/
+/***** GNU General Public License for more details.                         *****/
+/*****                                                                      *****/
+/***** You should have received a copy of the GNU General Public License    *****/
+/***** along with Dictionary module for DNN. If not, see                    *****/
+/***** <http://www.gnu.org/licenses/>.                                      *****/
+/*****                                                                      *****/
+/***** Copyright 2008 EELLC                                                 *****/
+/********************************************************************************/
+
+if not exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}Dictionary') and OBJECTPROPERTY(id, N'IsTable') = 1)
+CREATE TABLE {databaseOwner}{objectQualifier}Dictionary (
+	[translateDirection] [nvarchar](10) COLLATE Cyrillic_General_CI_AS NOT NULL,
+	[dictionaryName] [nvarchar](50) COLLATE Cyrillic_General_CI_AS NOT NULL,
+	[checkString] [nvarchar](100) COLLATE Cyrillic_General_CI_AS NOT NULL,
+	[warningString] [nvarchar](200) COLLATE Cyrillic_General_CI_AS NOT NULL,
+	[errorString] [nvarchar](200) COLLATE Cyrillic_General_CI_AS NOT NULL,
+	[voiceEngine] [nvarchar](50) COLLATE Cyrillic_General_CI_AS NOT NULL,
+  CONSTRAINT [PK_Dictionary] PRIMARY KEY CLUSTERED (
+	[translateDirection] ASC
+  )WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+if exists (select * from {databaseOwner}{objectQualifier}Dictionary where translateDirection = 'En>Ru')
+UPDATE {databaseOwner}{objectQualifier}Dictionary
+	SET dictionaryName='Dictionary_En_Ru', checkString='^([A-Za-z0-9_]+\s*)+$', warningString='Перевод слова отсутствует.', errorString='Ошибка ввода.', voiceEngine='ApplicationTtsEngineNameEn'
+	WHERE translateDirection = 'En>Ru'
+GO
+
+if not exists (select * from {databaseOwner}{objectQualifier}Dictionary where translateDirection = 'En>Ru')
+INSERT INTO {databaseOwner}{objectQualifier}Dictionary (translateDirection, dictionaryName, checkString, warningString, errorString, voiceEngine)
+     VALUES ('En>Ru' , 'Dictionary_En_Ru', '^([A-Za-z0-9_]+\s*)+$', 'Перевод слова отсутствует.', 'Ошибка ввода.', 'ApplicationTtsEngineNameEn')
+GO
+
+if exists (select * from {databaseOwner}{objectQualifier}Dictionary where translateDirection = 'Ru>En')
+UPDATE {databaseOwner}{objectQualifier}Dictionary
+	SET dictionaryName='Dictionary_Ru_En', checkString='^([А-Яа-я0-9_]+\s*)+$', warningString='No word translate.', errorString='Error in input.', voiceEngine='ApplicationTtsEngineNameRu'
+	WHERE translateDirection = 'Ru>En'
+GO
+
+if not exists (select * from {databaseOwner}{objectQualifier}Dictionary where translateDirection = 'Ru>En')
+INSERT INTO {databaseOwner}{objectQualifier}Dictionary (translateDirection, dictionaryName, checkString, warningString, errorString, voiceEngine)
+     VALUES ('Ru>En' , 'Dictionary_Ru_En', '^([А-Яа-я0-9_]+\s*)+$', 'No word translate.', 'Error in input.', 'ApplicationTtsEngineNameRu')
+GO
+
+if exists (select * from {databaseOwner}{objectQualifier}Dictionary where translateDirection = 'En>Sp')
+UPDATE {databaseOwner}{objectQualifier}Dictionary
+	SET dictionaryName='Dictionary_En_Sp', checkString='^(\w+\s*)+$', warningString='La traduccion de la palabra esta falta.', errorString='El error de la introduccion.', voiceEngine='ApplicationTtsEngineNameEn'
+	WHERE translateDirection = 'En>Sp'
+GO
+
+if not exists (select * from {databaseOwner}{objectQualifier}Dictionary where translateDirection = 'En>Sp')
+INSERT INTO {databaseOwner}{objectQualifier}Dictionary (translateDirection, dictionaryName, checkString, warningString, errorString, voiceEngine)
+     VALUES ('En>Sp' , 'Dictionary_En_Sp', '^(\w+\s*)+$', 'La traduccion de la palabra esta falta.', 'El error de la introduccion.', 'ApplicationTtsEngineNameEn')
+GO
+
+if exists (select * from {databaseOwner}{objectQualifier}Dictionary where translateDirection = 'Sp>En')
+UPDATE {databaseOwner}{objectQualifier}Dictionary
+	SET dictionaryName='Dictionary_Sp_En', checkString='^(\w+\s*)+$', warningString='No word translate.', errorString='Error in input.', voiceEngine='ApplicationTtsEngineNameSp'
+	WHERE translateDirection = 'Sp>En'
+GO
+
+if not exists (select * from {databaseOwner}{objectQualifier}Dictionary where translateDirection = 'Sp>En')
+INSERT INTO {databaseOwner}{objectQualifier}Dictionary (translateDirection, dictionaryName, checkString, warningString, errorString, voiceEngine)
+     VALUES ('Sp>En' , 'Dictionary_Sp_En', '^(\w+\s*)+$', 'No word translate.', 'Error in input.', 'ApplicationTtsEngineNameSp')
+GO
+
+if not exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}Dictionary_En_Ru') and OBJECTPROPERTY(id, N'IsTable') = 1)
+CREATE TABLE {databaseOwner}{objectQualifier}Dictionary_En_Ru (
+	[word] [nvarchar](100) COLLATE Cyrillic_General_CI_AS NULL,
+	[translate] [ntext] COLLATE Cyrillic_General_CI_AS NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+if not exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}Dictionary_En_Sp') and OBJECTPROPERTY(id, N'IsTable') = 1)
+CREATE TABLE {databaseOwner}{objectQualifier}Dictionary_En_Sp (
+	[word] [nvarchar](100) COLLATE Cyrillic_General_CI_AS NULL,
+	[translate] [ntext] COLLATE Cyrillic_General_CI_AS NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+if not exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}Dictionary_Ru_En') and OBJECTPROPERTY(id, N'IsTable') = 1)
+CREATE TABLE {databaseOwner}{objectQualifier}Dictionary_Ru_En (
+	[word] [nvarchar](100) COLLATE Cyrillic_General_CI_AS NULL,
+	[translate] [ntext] COLLATE Cyrillic_General_CI_AS NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+if not exists (select * from dbo.sysobjects where id = object_id(N'{databaseOwner}{objectQualifier}Dictionary_Sp_En') and OBJECTPROPERTY(id, N'IsTable') = 1)
+CREATE TABLE {databaseOwner}{objectQualifier}Dictionary_Sp_En (
+	[word] [nvarchar](100) COLLATE Cyrillic_General_CI_AS NULL,
+	[translate] [ntext] COLLATE Cyrillic_General_CI_AS NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ 
+/************************************************************/
+/*****              SqlDataProvider                     *****/
+/************************************************************/

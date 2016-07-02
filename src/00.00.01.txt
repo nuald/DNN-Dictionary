@@ -1,0 +1,2 @@
+bin\DotNetNuke.Modules.Dictionary.dll
+bin\DotNetNuke.Modules.Dictionary.SqlDataProvider.dll
